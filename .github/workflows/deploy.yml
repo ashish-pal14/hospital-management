@@ -1,7 +1,6 @@
 name: Deploy Hospital Management System
 
 
-
 on:
   push:
     branches: [ main ]   # trigger on push to main branch
