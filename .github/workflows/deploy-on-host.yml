@@ -1,0 +1,29 @@
+name: Deploy to Bare Metal (PHP Built‑in Server)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: self-hosted   # your runner on the same server
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Copy files to web root
+        run: |
+          sudo rsync -av --delete --exclude='.git' --exclude='.github' ./ /var/www/hospital-management/
+          sudo chown -R apache:apache /var/www/hospital-management
+
+      - name: Update environment variables in systemd service
+        run: |
+          sudo sed -i 's/^Environment=DB_HOST=.*/Environment=DB_HOST=${{ secrets.DB_HOST }}/' /etc/systemd/system/hospital-app.service
+          sudo sed -i 's/^Environment=DB_NAME=.*/Environment=DB_NAME=${{ secrets.DB_NAME }}/' /etc/systemd/system/hospital-app.service
+          sudo sed -i 's/^Environment=DB_USER=.*/Environment=DB_USER=${{ secrets.DB_USER }}/' /etc/systemd/system/hospital-app.service
+          sudo sed -i 's/^Environment=DB_PASSWORD=.*/Environment=DB_PASSWORD=${{ secrets.DB_PASSWORD }}/' /etc/systemd/system/hospital-app.service
+          sudo systemctl daemon-reload
+
+      - name: Restart the PHP server
+        run: sudo systemctl restart hospital-app
