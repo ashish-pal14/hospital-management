@@ -24,6 +24,7 @@ jobs:
           docker rm hospital-app || true
 
       - name: Run new container
+	run: |
 	docker run -d \
 		--name hospital-app \
 		-p 8080:80 \
