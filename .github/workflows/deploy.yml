@@ -22,15 +22,15 @@ jobs:
           docker rm hospital-app || true
 
       - name: Run new container
-  run: |
-    docker run -d \
-      --name hospital-app \
-      -p 8080:80 \
-      -e DB_HOST=192.168.1.2 \
-      -e DB_NAME=hospital_db \
-      -e DB_USER=appuser \
-      -e DB_PASSWORD=ashish@123 \
-      hospital-app
+        run: |
+          docker run -d \
+          --name hospital-app \
+          -p 8080:80 \
+          -e DB_HOST=192.168.1.2 \
+          -e DB_NAME=hospital_db \
+          -e DB_USER=appuser \
+          -e DB_PASSWORD=ashish@123 \
+          hospital-app
 
       - name: Clean up old images
         run: docker image prune -f
