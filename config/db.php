@@ -10,9 +10,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-$host = '192.168.1.2';
-$dbname = 'hospital_db';
-$username = 'frontend';
+$host = '192.1.2';
+$dbname = 'hosl_db';
+$username = 'frtend';
 $password = 'ashish@123';   // <-- CHANGE THIS
 
 try {
