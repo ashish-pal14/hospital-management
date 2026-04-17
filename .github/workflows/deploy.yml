@@ -25,7 +25,7 @@ jobs:
 
       - name: Run new container
 	run: |
-	docker run -d \
+		docker run -d \
 		--name hospital-app \
 		-p 8080:80 \
 		-e DB_HOST=192.168.1.2 \
