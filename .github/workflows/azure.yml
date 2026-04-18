@@ -30,9 +30,9 @@ jobs:
           key: ${{ secrets.AZURE_SSH_PRIVATE_KEY }}
           script: |
             # Update environment variables in the service file
-            sudo sed -i 's/^Environment=DB_HOST=.*/Environment=DB_HOST=${{ secrets.DB_HOST }}/' /etc/systemd/system/hospital-app.service
-            sudo sed -i 's/^Environment=DB_NAME=.*/Environment=DB_NAME=${{ secrets.DB_NAME }}/' /etc/systemd/system/hospital-app.service
-            sudo sed -i 's/^Environment=DB_USER=.*/Environment=DB_USER=${{ secrets.DB_USER }}/' /etc/systemd/system/hospital-app.service
-            sudo sed -i 's/^Environment=DB_PASSWORD=.*/Environment=DB_PASSWORD=${{ secrets.DB_PASSWORD }}/' /etc/systemd/system/hospital-app.service
+            #sudo sed -i 's/^Environment=DB_HOST=.*/Environment=DB_HOST=${{ secrets.DB_HOST }}/' /etc/systemd/system/hospital-app.service
+            #sudo sed -i 's/^Environment=DB_NAME=.*/Environment=DB_NAME=${{ secrets.DB_NAME }}/' /etc/systemd/system/hospital-app.service
+            #sudo sed -i 's/^Environment=DB_USER=.*/Environment=DB_USER=${{ secrets.DB_USER }}/' /etc/systemd/system/hospital-app.service
+            #sudo sed -i 's/^Environment=DB_PASSWORD=.*/Environment=DB_PASSWORD=${{ secrets.DB_PASSWORD }}/' /etc/systemd/system/hospital-app.service
             sudo systemctl daemon-reload
             sudo systemctl restart hospital-app
