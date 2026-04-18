@@ -1,0 +1,38 @@
+name: Deploy to Azure VM
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy via rsync over SSH
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.AZURE_SSH_PRIVATE_KEY }}
+          ARGS: "-avz --delete --exclude='.git' --exclude='.github'"
+          SOURCE: "./"
+          REMOTE_HOST: ${{ secrets.AZURE_VM_IP }}
+          REMOTE_USER: ${{ secrets.AZURE_VM_USER }}
+          TARGET: "/var/www/hospital-management"
+
+      - name: Update systemd service with DB credentials and restart
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.AZURE_VM_IP }}
+          username: ${{ secrets.AZURE_VM_USER }}
+          key: ${{ secrets.AZURE_SSH_PRIVATE_KEY }}
+          script: |
+            # Update environment variables in the service file
+            sudo sed -i 's/^Environment=DB_HOST=.*/Environment=DB_HOST=${{ secrets.DB_HOST }}/' /etc/systemd/system/hospital-app.service
+            sudo sed -i 's/^Environment=DB_NAME=.*/Environment=DB_NAME=${{ secrets.DB_NAME }}/' /etc/systemd/system/hospital-app.service
+            sudo sed -i 's/^Environment=DB_USER=.*/Environment=DB_USER=${{ secrets.DB_USER }}/' /etc/systemd/system/hospital-app.service
+            sudo sed -i 's/^Environment=DB_PASSWORD=.*/Environment=DB_PASSWORD=${{ secrets.DB_PASSWORD }}/' /etc/systemd/system/hospital-app.service
+            sudo systemctl daemon-reload
+            sudo systemctl restart hospital-app
