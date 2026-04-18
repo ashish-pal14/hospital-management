@@ -18,7 +18,7 @@ $password = getenv('DB_PASSWORD') ?: '';
 
 
 try {
-    $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8mb4";
+    $dsn = "mysql:host=$host;port=3306;dbname=$dbname;charset=utf8mb4";
 
     $pdo = new PDO($dsn, $username, $password, [
         PDO::MYSQL_ATTR_SSL_CA => '/etc/ssl/certs/DigiCertGlobalRootCA.crt.pem',
