@@ -55,5 +55,5 @@ jobs:
           --registry-password ${{ secrets.ACR_PASSWORD }} \
           --dns-name-label hospital-app-ashish14 \
           --ports 80 \
-	  --os-type Linux
+	  	  --os-type Linux
 
