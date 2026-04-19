@@ -1,0 +1,60 @@
+```yaml
+name: CI-CD to Azure
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Security Scan
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: fs
+        format: table
+
+    - name: Azure Login
+      uses: azure/login@v2
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: ACR Login
+      run: |
+        docker login hospital.azurecr.io \
+        -u ${{ secrets.ACR_USERNAME }} \
+        -p ${{ secrets.ACR_PASSWORD }}
+
+    - name: Build Image
+      run: |
+        docker build -t hospital.azurecr.io/hospital-app:${{ github.sha }} .
+
+    - name: Push Image
+      run: |
+        docker push hospital.azurecr.io/hospital-app:${{ github.sha }}
+
+    - name: Deploy to ACI
+      run: |
+        az container delete \
+          --name hospital-app \
+          --resource-group practice \
+          --yes || true
+
+        az container create \
+          --resource-group practice \
+          --name hospital-app \
+          --image hospital.azurecr.io/hospital-app:${{ github.sha }} \
+          --cpu 1 \
+          --memory 1 \
+          --registry-login-server hospital.azurecr.io \
+          --registry-username ${{ secrets.ACR_USERNAME }} \
+          --registry-password ${{ secrets.ACR_PASSWORD }} \
+          --dns-name-label hospital-app-ashish14 \
+          --ports 80
+```
+
