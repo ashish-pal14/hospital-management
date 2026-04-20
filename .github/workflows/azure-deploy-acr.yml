@@ -38,6 +38,7 @@ jobs:
         run: |
           docker push hospital.azurecr.io/hospital-app:${{ github.sha }}
 
+
       - name: Deploy to ACI
         run: |
           az container delete \
@@ -59,6 +60,12 @@ jobs:
             --dns-name-label hospital-app-ashish14 \
             --ports 80 \
             --os-type Linux \
-            --environment-variables \ DB_HOST=${{ secrets.DB_HOST }} \ DB_NAME=${{ secrets.DB_NAME }} \ DB_USER=${{ secrets.DB_USER }} \ --secure-environment-variables \ DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            --environment-variables \
+              DB_HOST=${{ secrets.DB_HOST }} \
+              DB_NAME=${{ secrets.DB_NAME }} \
+              DB_USER=${{ secrets.DB_USER }} \
+            --secure-environment-variables \
+              DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
             --restart-policy Always
+
 
