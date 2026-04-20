@@ -59,5 +59,6 @@ jobs:
             --dns-name-label hospital-app-ashish14 \
             --ports 80 \
             --os-type Linux \
+            --environment-variables \ DB_HOST=${{ secrets.DB_HOST }} \ DB_NAME=${{ secrets.DB_NAME }} \ DB_USER=${{ secrets.DB_USER }} \ --secure-environment-variables \ DB_PASSWORD=${{ secrets.DB_PASSWORD }}
             --restart-policy Always
 
