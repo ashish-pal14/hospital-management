@@ -1,0 +1,58 @@
+name: CI-CD to AKS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Security Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          format: table
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: ACR Login
+        run: |
+          docker login hospital.azurecr.io \
+            -u ${{ secrets.ACR_USERNAME }} \
+            -p ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build Image
+        run: |
+          docker build -t hospital.azurecr.io/hospital-app:${{ github.sha }} .
+
+      - name: Push Image
+        run: |
+          docker push hospital.azurecr.io/hospital-app:${{ github.sha }}
+
+      - name: Get AKS Credentials
+        run: |
+          az aks get-credentials \
+            --resource-group ${{ secrets.AKS_RESOURCE_GROUP }} \
+            --name ${{ secrets.AKS_CLUSTER_NAME }} \
+            --overwrite-existing
+
+      - name: Deploy to AKS
+        run: |
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
+
+          kubectl set image deployment/hospital-app \
+            hospital-app=hospital.azurecr.io/hospital-app:${{ github.sha }}
+
+          kubectl rollout status deployment/hospital-app
+
