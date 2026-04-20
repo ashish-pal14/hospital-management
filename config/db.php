@@ -11,10 +11,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 
-$host = getenv('DB_HOST') ?: 'localhost';
-$dbname = getenv('DB_NAME') ?: 'hospital_db';
-$username = getenv('DB_USER') ?: 'root';
-$password = getenv('DB_PASSWORD') ?: '';
+$host = getenv('db-host') ?: 'localhost';
+$dbname = getenv('db-name') ?: 'hospital_db';
+$username = getenv('db-user') ?: 'root';
+$password = getenv('db-password') ?: '';
 
 
 try {
