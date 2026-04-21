@@ -21,7 +21,7 @@ try {
     $dsn = "mysql:host=$host;port=3306;dbname=$dbname;charset=utf8mb4";
 
     $pdo = new PDO($dsn, $username, $password, [
-        PDO::MYSQL_ATTR_SSL_CA => '/etc/ssl/certs/ca-bundle.crt',
+        PDO::MYSQL_ATTR_SSL_CA => '/etc/ssl/certs/ca-certificates.crt',
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
     ]);
