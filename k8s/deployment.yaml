@@ -20,7 +20,7 @@ spec:
       containers:
       - name: hospital-app
         image: hospital.azurecr.io/hospital-app:latest
-	securityContext:
+        securityContext:
 	  runAsNonRoot: true
   	  runAsUser: 1000
   	  allowPrivilegeEscalation: false
