@@ -21,9 +21,9 @@ spec:
       - name: hospital-app
         image: hospital.azurecr.io/hospital-app:latest
         securityContext:
-	  runAsNonRoot: true
-  	  runAsUser: 1000
-  	  allowPrivilegeEscalation: false
+	  	  runAsNonRoot: true
+  	      runAsUser: 1000
+  	      allowPrivilegeEscalation: false
         resources:
           requests:
             cpu: "100m"
